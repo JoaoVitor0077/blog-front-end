@@ -61,4 +61,10 @@ export const postStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: "#555",
+    textAlign: "center",
+  },
 });

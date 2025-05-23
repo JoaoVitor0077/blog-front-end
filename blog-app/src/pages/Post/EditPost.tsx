@@ -1,3 +1,4 @@
+/*
 import React, { useState, useEffect } from "react";
 import { Text, TextInput, TouchableOpacity, Image, Alert, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -139,3 +140,4 @@ export const EditPost = ({ navigation, route }: EditPostProps) => {
     </ScrollView>
   );
 };
+*/

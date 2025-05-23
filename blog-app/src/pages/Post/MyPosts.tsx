@@ -1,84 +1,71 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+/*
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, Image, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../../services/api";
+import { myPostStyles } from "../../components/MyPostsStyles";
 
-export default function PostView() {
-  const route = useRoute();
-  const { post } = route.params as { post: any };
-
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Image source={{ uri: post.imageUrl }} style={styles.coverImage} />
-      
-      <Text style={styles.title}>{post.title}</Text>
-
-      <View style={styles.metaInfo}>
-        <Text style={styles.author}>Por {post.author}</Text>
-        <Text style={styles.date}>Criado em {post.date}</Text>
-      </View>
-
-      <View style={styles.stats}>
-        <View style={styles.statItem}>
-          <Ionicons name="heart" size={20} color="red" />
-          <Text style={styles.statText}>{post.likes}</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Ionicons name="chatbubble" size={20} color="#555" />
-          <Text style={styles.statText}>{post.comments}</Text>
-        </View>
-      </View>
-
-      <Text style={styles.content}>{post.content}</Text>
-    </ScrollView>
-  );
+interface Post {
+  id: number;
+  titulo: string;
+  conteudo: string;
+  imagem?: string;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  coverImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  metaInfo: {
-    marginBottom: 10,
-  },
-  author: {
-    fontSize: 14,
-    color: '#666',
-  },
-  date: {
-    fontSize: 12,
-    color: '#aaa',
-  },
-  stats: {
-    flexDirection: 'row',
-    marginBottom: 20,
-  },
-  statItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  statText: {
-    marginLeft: 5,
-    fontSize: 14,
-    color: '#555',
-  },
-  content: {
-    fontSize: 16,
-    color: '#444',
-    lineHeight: 24,
-  },
-});
+export const MyPosts = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPosts = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+        return;
+      }
+
+      const response = await api.get('/posts/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      setPosts(response.data as Post[]);
+    } catch (error: any) {
+      Alert.alert('Erro ao carregar posts', error.response?.data?.message || 'Tente novamente');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const renderItem = ({ item }: { item: Post }) => (
+    <View style={myPostStyles.postContainer}>
+      <Text style={myPostStyles.postTitle}>{item.titulo}</Text>
+      <Text style={myPostStyles.postContent}>{item.conteudo}</Text>
+    </View>
+  );
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#000" />;
+  }
+
+  return (
+    <View style={myPostStyles.container}>
+      <Text style={myPostStyles.header}>Meus Artigos</Text>
+      {posts.length === 0 ? (
+        <Text style={myPostStyles.noPosts}>Você ainda não criou nenhum artigo.</Text>
+      ) : (
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+        />
+      )}
+    </View>
+  );
+};
+*/

@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, Image, Alert, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { postStyles } from "../../components/PostStyles";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "../../services/api";
 
 export const CreatePost = ({ navigation }: any) => {
   const [titulo, setTitulo] = useState('');
   const [conteudo, setConteudo] = useState('');
+  /*
   const [imagem, setImagem] = useState<string | null>(null);
-
-  // Ajuste: ID do usuário (fixo ou pegue do contexto/autenticação)
-  const usuario_id = 1; // Troque para o id real do usuário autenticado
 
   const handleImagePicker = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -33,6 +32,7 @@ export const CreatePost = ({ navigation }: any) => {
       setImagem(result.assets[0].uri);
     }
   };
+  */
 
   const handleSave = async () => {
     if (!titulo || !conteudo) {
@@ -42,9 +42,9 @@ export const CreatePost = ({ navigation }: any) => {
 
     const formData = new FormData();
     formData.append('titulo', titulo);
-    formData.append('conteudo', conteudo);
-    formData.append('usuario_id', usuario_id.toString());
+    formData.append('conteudo', conteudo);        
 
+    /*
     if (imagem) {
       let fileType = imagem.substring(imagem.lastIndexOf('.') + 1);
       let mimeType = fileType === 'png' ? 'image/png' : 'image/jpeg';
@@ -53,13 +53,19 @@ export const CreatePost = ({ navigation }: any) => {
         uri: imagem,
         name: `image.${fileType}`,
         type: mimeType,
-      } as unknown as Blob);
+      } as any); // use 'as any' para evitar problemas de tipagem no React Native
     }
-
+    */
     try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+        return;
+      }
       await api.post('/posts', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          // NÃO defina 'Content-Type' aqui!
+          'Authorization': `Bearer ${token}`,
         },
       });
       Alert.alert('Sucesso', 'Post criado com sucesso!');
@@ -73,6 +79,7 @@ export const CreatePost = ({ navigation }: any) => {
     <ScrollView contentContainerStyle={postStyles.container}>
       <Text style={postStyles.header}>Criar Artigo</Text>
 
+      {/*}
       <Text style={postStyles.label}>Banner</Text>
       <TouchableOpacity onPress={handleImagePicker} style={postStyles.imagePicker}>
         {imagem ? (
@@ -81,7 +88,7 @@ export const CreatePost = ({ navigation }: any) => {
           <Text style={postStyles.imagePlaceholder}>Adicione uma imagem</Text>
         )}
       </TouchableOpacity>
-
+     */ }
       <Text style={postStyles.label}>Título</Text>
       <TextInput
         style={postStyles.input}

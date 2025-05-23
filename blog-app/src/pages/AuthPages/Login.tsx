@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Alert, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
 import { authStyles } from "../../components/AuthSyles";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "../../services/api";
 
 const Login = ({ navigation }: any) => {
@@ -17,6 +18,8 @@ const Login = ({ navigation }: any) => {
     try {
       const response = await api.post('/login', { email, senha });
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
+      const data = response.data as { token: string };
+      await AsyncStorage.setItem('token', data.token);
       navigation.navigate('Home');
     } catch (error: any) {
       Alert.alert('Erro ao fazer login', error.response?.data?.mensagem || 'Tente novamente');

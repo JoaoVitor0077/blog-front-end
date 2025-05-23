@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Modal, Pressable } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
   Home: undefined;
   Articles: undefined;
   CreatePost: undefined;
   MyPosts: undefined;
+  Login: undefined;
 };
 
 export default function Navbar() {
@@ -102,10 +104,11 @@ export default function Navbar() {
               
               <TouchableOpacity
                 style={[styles.menuItem, styles.lastMenuItem]}
-                onPress={() => {
+                onPress={async () => {
                   setShowProfileMenu(false);
                   // Adicione aqui a lógica de logout
-                  // handleLogout();
+                  await AsyncStorage.removeItem('token');
+                  navigation.navigate('Login');
                 }}
               >
                 <Text style={styles.menuItemText}>Sair</Text>
