@@ -1,29 +1,31 @@
-import React, { useState} from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
-import api from "../../services/api";
+// screens/RegisterScreen.js
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { authStyles } from "../../components/AuthSyles";
+import api from '../../services/api';
 
-const Register = ({ navigation }: any) => {
-  const [nome, setNome] = useState('');
+const ForgotPassword = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
 
-  const handleRegister = async () => {
+  // Dummy handler for reset button (implement your logic here)
+  const handleReset = async () => {
     // Validações básicas
-    if (!nome || !email || !senha || !confirmarSenha) {
+    if (!email || !novaSenha || !confirmarSenha) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos');
       return;
     }
 
-    if (senha !== confirmarSenha) {
+    if (novaSenha !== confirmarSenha) {
       Alert.alert('Erro', 'As senhas não coincidem');
       return;
     }
 
     try {
-      await api.post('/register', { nome, email, senha });
-      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      await api.post('/forgotpassword', { novaSenha });
+      Alert.alert('Sucesso', 'Senha alterada com sucesso!');
+      // Redirecionar para a tela de login
       navigation.navigate('Login');
     } catch (error: any) {
       Alert.alert('Erro ao cadastrar', error.response?.data?.mensagem || 'Tente novamente');
@@ -36,24 +38,16 @@ const Register = ({ navigation }: any) => {
         <View style={authStyles.content}>
           <TouchableOpacity 
             style={authStyles.backButton}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate('Login')}
           >
-            <Text style={authStyles.backButtonText}>← Registrar</Text>
+            <Text style={authStyles.backButtonText}>← Esqueci a senha</Text>
           </TouchableOpacity>
 
           <Text style={authStyles.subtitle}>
-            Para criar sua conta, informe seus dados e defina sua senha para participar da comunidade.
+            Para continuar, informe seu E-mail e defina sua nova senha para redefinir sua conta.
           </Text>
 
           <View style={authStyles.inputContainer}>
-            <TextInput
-              style={authStyles.input}
-              placeholder="Nome"
-              value={nome}
-              onChangeText={setNome}
-              autoCapitalize="words"
-            />
-
             <TextInput
               style={authStyles.input}
               placeholder="Email"
@@ -65,34 +59,30 @@ const Register = ({ navigation }: any) => {
             
             <TextInput
               style={authStyles.input}
-              placeholder="Senha"
-              value={senha}
-              onChangeText={setSenha}
+              placeholder="Nova senha"
+              value={novaSenha}
+              onChangeText={setNovaSenha}
               secureTextEntry
             />
 
             <TextInput
               style={authStyles.input}
-              placeholder="Confirmar senha"
+              placeholder="Confirmar nova senha"
               value={confirmarSenha}
               onChangeText={setConfirmarSenha}
               secureTextEntry
             />
           </View>
 
-          <TouchableOpacity style={authStyles.primaryButton} onPress={handleRegister}>
-            <Text style={authStyles.primaryButtonText}>Criar conta</Text>
+          <TouchableOpacity style={authStyles.primaryButton} onPress={handleReset}>
+            <Text style={authStyles.primaryButtonText}>Alterar</Text>
           </TouchableOpacity>
-
-          <Text style={authStyles.termsText}>
-            Ao criar uma conta, você concorda com os Termos de Uso e a Política de Privacidade.
-          </Text>
 
           <TouchableOpacity 
             style={authStyles.linkButton}
             onPress={() => navigation.navigate('Login')}
           >
-            <Text style={authStyles.linkText}>Já tem conta? Faça seu login aqui</Text>
+            <Text style={authStyles.linkText}>Voltar para o login aqui</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -100,4 +90,4 @@ const Register = ({ navigation }: any) => {
   );
 };
 
-export default Register;
+export default ForgotPassword;
